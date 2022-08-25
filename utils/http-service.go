@@ -24,7 +24,7 @@ func (s HttpService) Post() {
 	s.Do(r)
 }
 
-func (s HttpService) Do(r *http.Request) (map[string]any, error) {
+func (s HttpService) Do(r *http.Request) (data map[string]any, err error) {
 	r.Header = http.Header{
 		"Content-Type": {"application/json"},
 		// "Authorization": {"Bearer <token>"},
@@ -32,18 +32,12 @@ func (s HttpService) Do(r *http.Request) (map[string]any, error) {
 
 	res, err := (&http.Client{}).Do(r)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	buffer, _ := io.ReadAll(res.Body)
-	fmt.Println(string(buffer))
+	body, _ := io.ReadAll(res.Body)
+	fmt.Println(string(body))
 
-	data := map[string]any{}
-	err = json.Unmarshal(buffer, &data)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(data)
-
-	return data, nil
+	err = json.Unmarshal(body, &data)
+	return
 }
