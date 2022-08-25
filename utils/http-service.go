@@ -8,43 +8,29 @@ import (
 	"net/http"
 )
 
-func HttpGet() (map[string]any, error) {
-	client := http.Client{}
-	req, _ := http.NewRequest(http.MethodGet, "<url>", nil)
-	req.Header = http.Header{
-		"Content-Type": {"application/json"},
-		// "Authorization": {"Bearer <token>"},
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
+type HttpService struct{}
 
-	buffer, _ := io.ReadAll(res.Body)
-	fmt.Println(string(buffer))
-
-	data := map[string]any{}
-	err = json.Unmarshal(buffer, &data)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(data)
-
-	return data, nil
+func (s HttpService) Get() {
+	r, _ := http.NewRequest(http.MethodGet, "<url>", nil)
+	s.Do(r)
 }
 
-func HttpPost() (map[string]any, error) {
-	client := http.Client{}
+func (s HttpService) Post() {
 	body, _ := json.Marshal(map[string]any{
 		"username": "superadmin",
 		"password": "123456",
 	})
-	req, _ := http.NewRequest(http.MethodPost, "<url>", bytes.NewBuffer(body))
-	req.Header = http.Header{
+	r, _ := http.NewRequest(http.MethodPost, "<url>", bytes.NewBuffer(body))
+	s.Do(r)
+}
+
+func (s HttpService) Do(r *http.Request) (map[string]any, error) {
+	r.Header = http.Header{
 		"Content-Type": {"application/json"},
 		// "Authorization": {"Bearer <token>"},
 	}
-	res, err := client.Do(req)
+
+	res, err := (&http.Client{}).Do(r)
 	if err != nil {
 		return nil, err
 	}
