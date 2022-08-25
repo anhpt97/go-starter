@@ -6,12 +6,12 @@ type contentType struct {
 }
 
 var File = struct {
-	MaxSize     int64
 	ContentType contentType
+	MaxSize     int64
 }{
-	MaxSize: 10 * 1000 * 1000, // 10 MB
 	ContentType: contentType{
 		Jpeg: "image/jpeg",
 		Png:  "image/png",
 	},
+	MaxSize: 10 * 1000 * 1000, // 10 MB
 }
