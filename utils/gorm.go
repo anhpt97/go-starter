@@ -33,6 +33,7 @@ func GetAllColumnNamesOfTableQuery(model Model) string {
 
 	regexp := regexp.MustCompile(`column:\w+`)
 	tableName := model.TableName()
+	aliasTableName := cases.Title(language.Und).String(tableName)
 
 	t := reflect.TypeOf(model)
 	for i := 0; i < t.NumField(); i++ {
@@ -45,7 +46,7 @@ func GetAllColumnNamesOfTableQuery(model Model) string {
 		}
 		s = append(s, fmt.Sprintf("%v AS %v",
 			tableName+"."+column,
-			cases.Title(language.Und).String(tableName)+"__"+column,
+			aliasTableName+"__"+column,
 		))
 	}
 

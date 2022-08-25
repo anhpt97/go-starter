@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"go-starter/enums"
 	"go-starter/errors"
 	"net/http"
 
@@ -8,7 +9,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func RoleBasedAuth(roles ...string) mux.MiddlewareFunc {
+func RoleBasedAuth(roles ...enums.UserRole) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			currentUser, ok := GetCurrentUser(w, r)

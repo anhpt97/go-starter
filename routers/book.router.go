@@ -17,8 +17,8 @@ func BookRouter(r *mux.Router) {
 	// s.Use(
 	// 	middlewares.JwtAuth,
 	// 	middlewares.RoleBasedAuth(
-	// 		string(enums.User.Role.Admin),
-	// 		string(enums.User.Role.User),
+	// 		enums.User.Role.Admin,
+	// 		enums.User.Role.User,
 	// 	),
 	// )
 
@@ -38,8 +38,8 @@ func BookRouter(r *mux.Router) {
 		middlewares.NewChain(
 			middlewares.JwtAuth,
 			middlewares.RoleBasedAuth(
-				// string(enums.User.Role.Admin),
-				string(enums.User.Role.User),
+				// enums.User.Role.Admin,
+				enums.User.Role.User,
 			),
 		).Then(
 			bookHandler.Delete,

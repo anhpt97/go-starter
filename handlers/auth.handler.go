@@ -53,7 +53,7 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		models.CurrentUser{
 			ID:        user.ID,
 			Username:  user.Username,
-			Role:      string(user.Role),
+			Role:      user.Role,
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(env.JWT_EXPIRES_AT * time.Second).Unix(),
 		},
