@@ -64,7 +64,7 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) (currentUser models.
 	return models.CurrentUser{
 		ID:        uint64(claims["id"].(float64)),
 		Username:  claims["username"].(string),
-		Role:      claims["role"].(enums.UserRole),
+		Role:      enums.UserRole(claims["role"].(string)),
 		IssuedAt:  int64(claims["iat"].(float64)),
 		ExpiresAt: int64(claims["exp"].(float64)),
 	}, true
