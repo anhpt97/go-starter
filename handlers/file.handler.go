@@ -24,6 +24,8 @@ func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		switch err {
 		case http.ErrMissingBoundary:
 			errors.BadRequestException(w, r, enums.Error.FileNotFound)
+		case http.ErrMissingFile:
+			errors.BadRequestException(w, r, enums.Error.FileNotFound)
 		default:
 			errors.BadRequestException(w, r, err)
 		}
