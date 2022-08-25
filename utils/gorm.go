@@ -37,16 +37,16 @@ func GetAllColumnNamesOfTableQuery(model Model) string {
 
 	t := reflect.TypeOf(model)
 	for i := 0; i < t.NumField(); i++ {
-		column := strings.ReplaceAll(
+		columnName := strings.ReplaceAll(
 			regexp.FindString(t.Field(i).Tag.Get("gorm")),
 			"column:", "",
 		)
-		if len(column) == 0 {
+		if len(columnName) == 0 {
 			continue
 		}
 		s = append(s, fmt.Sprintf("%v AS %v",
-			tableName+"."+column,
-			aliasTableName+"__"+column,
+			tableName+"."+columnName,
+			aliasTableName+"__"+columnName,
 		))
 	}
 
