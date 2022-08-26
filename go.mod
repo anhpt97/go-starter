@@ -5,13 +5,13 @@ go 1.19
 require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
 	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/samber/lo v1.27.0
 	github.com/spf13/viper v1.12.0
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.5
-	go.uber.org/fx v1.18.1
 	golang.org/x/crypto v0.0.0-20220824171710-5757bc0c5503
 	golang.org/x/exp v0.0.0-20220823124025-807a23277127
 	golang.org/x/text v0.3.7
@@ -29,7 +29,6 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/google/wire v0.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
@@ -46,10 +45,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
-	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/dig v1.15.0 // indirect
-	go.uber.org/multierr v1.8.0 // indirect
-	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c // indirect
 	golang.org/x/sys v0.0.0-20220825204002-c680a09ffe64 // indirect
 	golang.org/x/tools v0.1.12 // indirect
