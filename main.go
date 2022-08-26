@@ -9,7 +9,7 @@ import (
 	"go-starter/routers"
 	"net/http"
 
-	"go.uber.org/fx"
+	"github.com/google/wire"
 )
 
 // @title       Go starter
@@ -22,9 +22,14 @@ import (
 func main() {
 	database.Connect()
 	r := routers.New()
-	fx.New(
-		handlers.Module,
-		repositories.Module,
-		fx.Invoke(http.ListenAndServe(":"+env.PORT, r))).Run()
+	wire.Build(
+		repositories.Set,
+		handlers.Set,
+		http.ListenAndServe(":"+env.PORT, r),
+	)
+	// fx.New(
+	// 	handlers.Module,
+	// 	repositories.Module,
+	// 	fx.Invoke(http.ListenAndServe(":"+env.PORT, r))).Run()
 	// log.Fatal(http.ListenAndServe(":"+env.PORT, r))
 }

@@ -18,14 +18,14 @@ import (
 )
 
 type AuthHandler struct {
-	userRepository repositories.IUserRepository
+	userRepository repositories.UserRepository
 }
 
 type IAuthHandler interface {
 	Login(w http.ResponseWriter, r *http.Request)
 }
 
-func NewAuthHandler(userRepository repositories.IUserRepository) IAuthHandler {
+func NewAuthHandler(userRepository repositories.UserRepository) IAuthHandler {
 	return &AuthHandler{
 		userRepository: userRepository,
 	}
@@ -37,13 +37,13 @@ func NewAuthHandler(userRepository repositories.IUserRepository) IAuthHandler {
 // @Param   locale             query  string        false " " enums(en,vi)
 // @Success 201                object response.Response{data=models.LoginResponse}
 // @Router  /api/v1/auth/login [POST]
-func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	body := dto.LoginBody{}
 	if _, err := utils.ValidateRequestBody(w, r, &body); err != nil {
 		return
 	}
 
-	user, ok := repositories.UserRepository{}.FindOne(w, r, entities.User{Username: body.Username})
+	user, ok := h.userRepository.FindOne(w, r, entities.User{Username: body.Username})
 	if !ok {
 		return
 	}

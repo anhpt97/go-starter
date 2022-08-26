@@ -3,7 +3,7 @@ package handlers
 import (
 	"go-starter/repositories"
 
-	"go.uber.org/fx"
+	"github.com/google/wire"
 )
 
 var (
@@ -11,6 +11,6 @@ var (
 	userRepository = repositories.UserRepository{}
 )
 
-var Module = fx.Options(
-	fx.Provide(NewAuthHandler),
+var Set = wire.NewSet(
+	NewAuthHandler,
 )
