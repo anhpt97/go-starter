@@ -10,8 +10,8 @@ import (
 var authHandler = handlers.AuthHandler{}
 
 func AuthRouter(r *mux.Router) {
-	s := r.PathPrefix("").Subrouter()
+	s := r.PathPrefix("/auth").Subrouter()
 
-	s.HandleFunc("/auth/login", authHandler.Login).
+	s.HandleFunc("/login", authHandler.Login).
 		Methods(http.MethodPost)
 }

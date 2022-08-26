@@ -12,7 +12,7 @@ import (
 var bookHandler = handlers.BookHandler{}
 
 func BookRouter(r *mux.Router) {
-	s := r.PathPrefix("").Subrouter()
+	s := r.PathPrefix("/books").Subrouter()
 
 	// s.Use(
 	// 	middlewares.JwtAuth,
@@ -22,19 +22,19 @@ func BookRouter(r *mux.Router) {
 	// 	),
 	// )
 
-	s.HandleFunc("/books", bookHandler.GetList).
+	s.HandleFunc("", bookHandler.GetList).
 		Methods(http.MethodGet)
 
-	s.HandleFunc("/books/{id}", bookHandler.GetOneByID).
+	s.HandleFunc("/{id}", bookHandler.GetOneByID).
 		Methods(http.MethodGet)
 
-	s.HandleFunc("/books", bookHandler.Create).
+	s.HandleFunc("", bookHandler.Create).
 		Methods(http.MethodPost)
 
-	s.HandleFunc("/books/{id}", bookHandler.Update).
+	s.HandleFunc("/{id}", bookHandler.Update).
 		Methods(http.MethodPut)
 
-	s.HandleFunc("/books/{id}",
+	s.HandleFunc("/{id}",
 		middlewares.NewChain(
 			middlewares.JwtAuth,
 			middlewares.RoleBasedAuth(
