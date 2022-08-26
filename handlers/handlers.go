@@ -1,16 +1,8 @@
 package handlers
 
-import (
-	"go-starter/repositories"
-
-	"github.com/google/wire"
-)
-
-var (
-	bookRepository = repositories.BookRepository{}
-	userRepository = repositories.UserRepository{}
-)
+import "github.com/google/wire"
 
 var Set = wire.NewSet(
 	NewAuthHandler,
+	NewBookHandler,
 )

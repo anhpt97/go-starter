@@ -13,7 +13,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type BookHandler struct{}
+type BookHandler struct {
+	bookRepository repositories.BookRepository
+	userRepository repositories.UserRepository
+}
+
+type IBookHandler interface {
+	GetList(w http.ResponseWriter, r *http.Request)
+	GetOneByID(w http.ResponseWriter, r *http.Request)
+	Create(w http.ResponseWriter, r *http.Request)
+	Update(w http.ResponseWriter, r *http.Request)
+	Delete(w http.ResponseWriter, r *http.Request)
+}
+
+func NewBookHandler(bookRepository repositories.BookRepository, userRepository repositories.UserRepository) IBookHandler {
+	return &BookHandler{
+		bookRepository: bookRepository,
+		userRepository: userRepository,
+	}
+}
 
 // @Tags    books
 // @Summary Get a list of books
@@ -25,7 +43,7 @@ type BookHandler struct{}
 // @Param   locale        query  string false " " enums(en,vi)
 // @Success 200           object response.Response{data=models.PaginationResponse{items=[]entities.Book,total=number}}
 // @Router  /api/v1/books [GET]
-func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	pagination := utils.Pagination(r)
 
 	books := []entities.Book{}
@@ -43,7 +61,7 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	q.Limit(pagination.Limit).
 		Offset(pagination.Offset).
 		Order(pagination.Order)
-	books, total, err := bookRepository.FindAndCount(w, r, q)
+	books, total, err := h.bookRepository.FindAndCount(w, r, q)
 	if err != nil {
 		return
 	}
@@ -81,10 +99,10 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 // @Param   locale             query  string false " " enums(en,vi)
 // @Success 200                object response.Response{data=entities.Book}
 // @Router  /api/v1/books/{id} [GET]
-func (h BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	book, err := bookRepository.FindOne(w, r, entities.Book{ID: utils.ConvertToUint64(id)})
+	book, err := h.bookRepository.FindOne(w, r, entities.Book{ID: utils.ConvertToUint64(id)})
 	if err != nil {
 		return
 	}
@@ -100,7 +118,7 @@ func (h BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
 // @Param   locale        query  string             false " " enums(en,vi)
 // @Success 201           object response.Response{data=entities.Book}
 // @Router  /api/v1/books [POST]
-func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	body := dto.CreateBookBody{}
 	fields, err := utils.ValidateRequestBody(w, r, &body)
 	if err != nil {
@@ -108,13 +126,13 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if body.UserID != nil {
-		_, ok := userRepository.FindOne(w, r, entities.User{ID: *body.UserID})
+		_, ok := h.userRepository.FindOne(w, r, entities.User{ID: *body.UserID})
 		if !ok {
 			return
 		}
 	}
 
-	book, err := bookRepository.Create(w, r, body, fields)
+	book, err := h.bookRepository.Create(w, r, body, fields)
 	if err != nil {
 		return
 	}
@@ -131,7 +149,7 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 // @Param   locale             query  string             false " " enums(en,vi)
 // @Success 200                object response.Response{data=entities.Book}
 // @Router  /api/v1/books/{id} [PUT]
-func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	body := dto.UpdateBookBody{}
 	fields, err := utils.ValidateRequestBody(w, r, &body)
 	if err != nil {
@@ -139,7 +157,7 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := mux.Vars(r)["id"]
-	book, err := bookRepository.Update(w, r, id, body, fields)
+	book, err := h.bookRepository.Update(w, r, id, body, fields)
 	if err != nil {
 		return
 	}
@@ -156,7 +174,7 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 // @Param    locale             query    string false " " enums(en,vi)
 // @Success  200                object   response.Response{data=boolean}
 // @Router   /api/v1/books/{id} [DELETE]
-func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	// currentUser, ok := middlewares.GetCurrentUser(w, r)
 	// if !ok {
 	// 	return
@@ -164,7 +182,7 @@ func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 
-	err := bookRepository.Delete(w, r, id)
+	err := h.bookRepository.Delete(w, r, id)
 	if err != nil {
 		return
 	}
