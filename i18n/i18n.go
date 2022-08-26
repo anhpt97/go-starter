@@ -8,12 +8,12 @@ import (
 	"golang.org/x/text/language"
 )
 
-const LOCALES_DIR = "./locales"
+const localesDir = "./locales"
 
 var bundle *i18n.Bundle
 
 func init() {
-	files, err := os.ReadDir(LOCALES_DIR)
+	files, err := os.ReadDir(localesDir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,7 +21,7 @@ func init() {
 	bundle = i18n.NewBundle(language.English)
 	for _, file := range files {
 		filename := file.Name()
-		data, err := os.ReadFile(LOCALES_DIR + "/" + filename)
+		data, err := os.ReadFile(localesDir + "/" + filename)
 		if err != nil {
 			log.Fatal(err)
 		}
