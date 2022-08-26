@@ -9,6 +9,14 @@ import (
 
 type UserRepository struct{}
 
+type IUserRepository interface {
+	FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool)
+}
+
+func NewUserRepository() IUserRepository {
+	return &UserRepository{}
+}
+
 func (repository UserRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool) {
 	err := CreateSqlBuilder(user).
 		Where(conditions).

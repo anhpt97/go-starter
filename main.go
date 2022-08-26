@@ -4,9 +4,12 @@ import (
 	"go-starter/database"
 	_ "go-starter/docs"
 	"go-starter/env"
+	"go-starter/handlers"
+	"go-starter/repositories"
 	"go-starter/routers"
-	"log"
 	"net/http"
+
+	"go.uber.org/fx"
 )
 
 // @title       Go starter
@@ -19,5 +22,9 @@ import (
 func main() {
 	database.Connect()
 	r := routers.New()
-	log.Fatal(http.ListenAndServe(":"+env.PORT, r))
+	fx.New(
+		handlers.Module,
+		repositories.Module,
+		fx.Invoke(http.ListenAndServe(":"+env.PORT, r))).Run()
+	// log.Fatal(http.ListenAndServe(":"+env.PORT, r))
 }

@@ -17,7 +17,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthHandler struct{}
+type AuthHandler struct {
+	userRepository repositories.IUserRepository
+}
+
+type IAuthHandler interface {
+	Login(w http.ResponseWriter, r *http.Request)
+}
+
+func NewAuthHandler(userRepository repositories.IUserRepository) IAuthHandler {
+	return &AuthHandler{
+		userRepository: userRepository,
+	}
+}
 
 // @Tags    auth
 // @Summary Login
