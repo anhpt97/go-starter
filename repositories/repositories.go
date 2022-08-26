@@ -16,5 +16,6 @@ func CreateSqlBuilder(model any) *gorm.DB {
 }
 
 var Set = wire.NewSet(
+	NewBookRepository,
 	NewUserRepository,
 )
