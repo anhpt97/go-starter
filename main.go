@@ -23,13 +23,8 @@ func main() {
 	database.Connect()
 	r := routers.New()
 	wire.Build(
-		repositories.Set,
 		handlers.Set,
+		repositories.Set,
 		http.ListenAndServe(":"+env.PORT, r),
 	)
-	// fx.New(
-	// 	handlers.Module,
-	// 	repositories.Module,
-	// 	fx.Invoke(http.ListenAndServe(":"+env.PORT, r))).Run()
-	// log.Fatal(http.ListenAndServe(":"+env.PORT, r))
 }
