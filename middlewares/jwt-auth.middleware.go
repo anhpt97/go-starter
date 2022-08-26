@@ -44,7 +44,7 @@ func JwtAuth(next http.Handler) http.Handler {
 			return
 		}
 
-		_, ok := repositories.UserRepository{}.FindOne(w, r, entities.User{ID: utils.ConvertToUint64(claims["id"])})
+		_, ok := (&repositories.UserRepository{}).FindOne(w, r, entities.User{ID: utils.ConvertToUint64(claims["id"])})
 		if !ok {
 			return
 		}

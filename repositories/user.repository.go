@@ -17,7 +17,7 @@ func NewUserRepository() IUserRepository {
 	return &UserRepository{}
 }
 
-func (repository UserRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool) {
+func (repository *UserRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool) {
 	err := CreateSqlBuilder(user).
 		Where(conditions).
 		Take(&user).Error
