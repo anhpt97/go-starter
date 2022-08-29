@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/google/wire"
+	"go.uber.org/fx"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +15,7 @@ func CreateSqlBuilder(model any) *gorm.DB {
 	return DB.Model(model)
 }
 
-var Set = wire.NewSet(
-	NewBookRepository,
-	NewUserRepository,
+var Module = fx.Options(
+	fx.Provide(NewBookRepository),
+	fx.Provide(NewUserRepository),
 )

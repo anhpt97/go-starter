@@ -1,9 +1,9 @@
 package handlers
 
-import "github.com/google/wire"
+import "go.uber.org/fx"
 
-var Set = wire.NewSet(
-	NewAuthHandler,
-	NewBookHandler,
-	NewFileHandler,
+var Module = fx.Options(
+	fx.Provide(NewAuthHandler),
+	fx.Provide(NewBookHandler),
+	fx.Provide(NewFileHandler),
 )
