@@ -27,7 +27,7 @@ type IAuthHandler interface {
 
 func NewAuthHandler(userRepository repositories.UserRepository) IAuthHandler {
 	return &AuthHandler{
-		userRepository: userRepository,
+		userRepository,
 	}
 }
 

@@ -28,8 +28,8 @@ type IBookHandler interface {
 
 func NewBookHandler(bookRepository repositories.BookRepository, userRepository repositories.UserRepository) IBookHandler {
 	return &BookHandler{
-		bookRepository: bookRepository,
-		userRepository: userRepository,
+		bookRepository,
+		userRepository,
 	}
 }
 
