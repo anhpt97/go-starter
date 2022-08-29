@@ -24,8 +24,8 @@ func main() {
 	database.Connect()
 	r := routers.New()
 	fx.New(
-		lib.Module,
 		handlers.Module,
+		lib.Module,
 		repositories.Module,
 		fx.Invoke(http.ListenAndServe(":"+env.PORT, r)),
 	).Run()
