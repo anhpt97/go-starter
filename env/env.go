@@ -33,6 +33,6 @@ func init() {
 	DB_PORT = viper.GetString("DB_PORT")
 	DB_NAME = viper.GetString("DB_NAME")
 
-	JWT_EXPIRES_AT = time.Duration(viper.GetInt("JWT_EXPIRES_AT"))
+	JWT_EXPIRES_AT = viper.GetDuration("JWT_EXPIRES_AT")
 	JWT_SECRET = []byte(viper.GetString("JWT_SECRET"))
 }
