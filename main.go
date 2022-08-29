@@ -5,6 +5,7 @@ import (
 	_ "go-starter/docs"
 	"go-starter/env"
 	"go-starter/handlers"
+	"go-starter/lib"
 	"go-starter/repositories"
 	"go-starter/routers"
 	"net/http"
@@ -23,6 +24,7 @@ func main() {
 	database.Connect()
 	r := routers.New()
 	fx.New(
+		lib.Module,
 		handlers.Module,
 		repositories.Module,
 		fx.Invoke(http.ListenAndServe(":"+env.PORT, r)),
