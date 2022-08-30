@@ -12,12 +12,8 @@ import (
 
 type FileHandler struct{}
 
-type IFileHandler interface {
-	Upload(w http.ResponseWriter, r *http.Request)
-}
-
-func NewFileHandler() IFileHandler {
-	return &FileHandler{}
+func NewFileHandler() FileHandler {
+	return FileHandler{}
 }
 
 // @Tags    file

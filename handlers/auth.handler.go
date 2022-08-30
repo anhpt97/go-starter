@@ -6,6 +6,7 @@ import (
 	"go-starter/enums"
 	"go-starter/env"
 	"go-starter/errors"
+	"go-starter/lib"
 	"go-starter/models"
 	"go-starter/repositories"
 	"go-starter/response"
@@ -18,15 +19,15 @@ import (
 )
 
 type AuthHandler struct {
+	env            lib.Env
+	db             lib.Db
 	userRepository repositories.UserRepository
 }
 
-type IAuthHandler interface {
-	Login(w http.ResponseWriter, r *http.Request)
-}
-
-func NewAuthHandler(userRepository repositories.UserRepository) IAuthHandler {
-	return &AuthHandler{
+func NewAuthHandler(env lib.Env, db lib.Db, userRepository repositories.UserRepository) AuthHandler {
+	return AuthHandler{
+		env,
+		db,
 		userRepository,
 	}
 }
@@ -37,7 +38,7 @@ func NewAuthHandler(userRepository repositories.UserRepository) IAuthHandler {
 // @Param   locale             query  string        false " " enums(en,vi)
 // @Success 201                object response.Response{data=models.LoginResponse}
 // @Router  /api/v1/auth/login [POST]
-func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	body := dto.LoginBody{}
 	if _, err := utils.ValidateRequestBody(w, r, &body); err != nil {
 		return

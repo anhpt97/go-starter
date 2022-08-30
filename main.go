@@ -27,12 +27,13 @@ func main() {
 		handlers.Module,
 		lib.Module,
 		repositories.Module,
+		routers.Module,
 		fx.Invoke(
-			func(lc fx.Lifecycle, env lib.Env) {
+			func(lc fx.Lifecycle, routers routers.Routers, env lib.Env) {
 				lc.Append(fx.Hook{
 					OnStart: func(ctx context.Context) (err error) {
 						go func() {
-							r := routers.New()
+							r := routers.New("/api/v1")
 							http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
 						}()
 						return

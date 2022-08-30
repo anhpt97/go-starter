@@ -6,14 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
+	"go.uber.org/fx"
 )
-
-func New() *mux.Router {
-	r := mux.NewRouter()
-	swaggerInit(r, "/swagger")
-	apiGroup(r, "/api/v1")
-	return r
-}
 
 func swaggerInit(r *mux.Router, prefix string) {
 	r.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
@@ -26,9 +20,37 @@ func swaggerInit(r *mux.Router, prefix string) {
 	r.PathPrefix(prefix).HandlerFunc(httpSwagger.WrapHandler)
 }
 
-func apiGroup(r *mux.Router, prefix string) {
+var Module = fx.Options(
+	fx.Provide(NewRouters),
+	fx.Provide(NewAuthRouter),
+	fx.Provide(NewBookRouter),
+	fx.Provide(NewFileRouter),
+)
+
+type Router interface {
+	New(r *mux.Router)
+}
+
+type Routers []Router
+
+func NewRouters(
+	authRouter AuthRouter,
+	bookRouter BookRouter,
+	fileRouter FileRouter,
+) Routers {
+	return Routers{
+		authRouter,
+		bookRouter,
+		fileRouter,
+	}
+}
+
+func (routers Routers) New(prefix string) *mux.Router {
+	r := mux.NewRouter()
+	swaggerInit(r, "/swagger")
 	s := r.PathPrefix(prefix).Subrouter()
-	AuthRouter(s)
-	BookRouter(s)
-	FileRouter(s)
+	for _, router := range routers {
+		router.New(s)
+	}
+	return r
 }

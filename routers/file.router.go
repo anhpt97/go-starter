@@ -7,11 +7,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var fileHandler = handlers.FileHandler{}
+type FileRouter struct {
+	fileHandler handlers.FileHandler
+}
 
-func FileRouter(r *mux.Router) {
+func NewFileRouter(fileHandler handlers.FileHandler) FileRouter {
+	return FileRouter{
+		fileHandler,
+	}
+}
+
+func (router FileRouter) New(r *mux.Router) {
 	s := r.PathPrefix("/file").Subrouter()
 
-	s.HandleFunc("/upload", fileHandler.Upload).
+	s.HandleFunc("/upload", router.fileHandler.Upload).
 		Methods(http.MethodPost)
 }

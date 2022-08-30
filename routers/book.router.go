@@ -9,9 +9,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var bookHandler = handlers.BookHandler{}
+type BookRouter struct {
+	bookHandler handlers.BookHandler
+}
 
-func BookRouter(r *mux.Router) {
+func NewBookRouter(bookHandler handlers.BookHandler) BookRouter {
+	return BookRouter{
+		bookHandler,
+	}
+}
+
+func (router BookRouter) New(r *mux.Router) {
 	s := r.PathPrefix("/books").Subrouter()
 
 	// s.Use(
@@ -22,16 +30,16 @@ func BookRouter(r *mux.Router) {
 	// 	),
 	// )
 
-	s.HandleFunc("", bookHandler.GetList).
+	s.HandleFunc("", router.bookHandler.GetList).
 		Methods(http.MethodGet)
 
-	s.HandleFunc("/{id}", bookHandler.GetOneByID).
+	s.HandleFunc("/{id}", router.bookHandler.GetOneByID).
 		Methods(http.MethodGet)
 
-	s.HandleFunc("", bookHandler.Create).
+	s.HandleFunc("", router.bookHandler.Create).
 		Methods(http.MethodPost)
 
-	s.HandleFunc("/{id}", bookHandler.Update).
+	s.HandleFunc("/{id}", router.bookHandler.Update).
 		Methods(http.MethodPut)
 
 	s.HandleFunc("/{id}",
@@ -42,7 +50,7 @@ func BookRouter(r *mux.Router) {
 				enums.User.Role.User,
 			),
 		).Then(
-			bookHandler.Delete,
+			router.bookHandler.Delete,
 		),
 	).
 		Methods(http.MethodDelete)

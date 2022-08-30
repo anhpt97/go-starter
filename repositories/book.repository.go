@@ -15,19 +15,11 @@ import (
 
 type BookRepository struct{}
 
-type IBookRepository interface {
-	FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error)
-	FindOne(w http.ResponseWriter, r *http.Request, conditions entities.Book) (book entities.Book, err error)
-	Create(w http.ResponseWriter, r *http.Request, body dto.CreateBookBody, fields []string) (book entities.Book, err error)
-	Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody, fields []string) (book entities.Book, err error)
-	Delete(w http.ResponseWriter, r *http.Request, id any) (err error)
+func NewBookRepository() BookRepository {
+	return BookRepository{}
 }
 
-func NewBookRepository() IBookRepository {
-	return &BookRepository{}
-}
-
-func (repository *BookRepository) FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error) {
+func (repository BookRepository) FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error) {
 	ch := make(chan error, 2)
 	wg := sync.WaitGroup{}
 	wg.Add(2)
@@ -65,7 +57,7 @@ func (repository *BookRepository) FindAndCount(w http.ResponseWriter, r *http.Re
 	return
 }
 
-func (repository *BookRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.Book) (book entities.Book, err error) {
+func (repository BookRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.Book) (book entities.Book, err error) {
 	err = CreateSqlBuilder(book).
 		Joins("User").
 		// Joins("INNER JOIN user ON book.user_id = user.id").
@@ -83,7 +75,7 @@ func (repository *BookRepository) FindOne(w http.ResponseWriter, r *http.Request
 	return
 }
 
-func (repository *BookRepository) Create(w http.ResponseWriter, r *http.Request, body dto.CreateBookBody, fields []string) (book entities.Book, err error) {
+func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request, body dto.CreateBookBody, fields []string) (book entities.Book, err error) {
 	_body, _ := json.Marshal(body)
 	json.Unmarshal(_body, &book)
 
@@ -100,7 +92,7 @@ func (repository *BookRepository) Create(w http.ResponseWriter, r *http.Request,
 	return repository.FindOne(w, r, entities.Book{ID: book.ID})
 }
 
-func (repository *BookRepository) Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody, fields []string) (book entities.Book, err error) {
+func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody, fields []string) (book entities.Book, err error) {
 	book, err = repository.FindOne(w, r, entities.Book{ID: utils.ConvertToUint64(id)})
 	if err != nil {
 		return
@@ -119,7 +111,7 @@ func (repository *BookRepository) Update(w http.ResponseWriter, r *http.Request,
 	return repository.FindOne(w, r, entities.Book{ID: book.ID})
 }
 
-func (repository *BookRepository) Delete(w http.ResponseWriter, r *http.Request, id any) (err error) {
+func (repository BookRepository) Delete(w http.ResponseWriter, r *http.Request, id any) (err error) {
 	book, err := repository.FindOne(w, r, entities.Book{ID: utils.ConvertToUint64(id)})
 	if err != nil {
 		return

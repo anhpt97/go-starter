@@ -7,11 +7,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var authHandler = handlers.AuthHandler{}
+type AuthRouter struct {
+	authHandler handlers.AuthHandler
+}
 
-func AuthRouter(r *mux.Router) {
+func NewAuthRouter(authHandler handlers.AuthHandler) AuthRouter {
+	return AuthRouter{
+		authHandler,
+	}
+}
+
+func (router AuthRouter) New(r *mux.Router) {
 	s := r.PathPrefix("/auth").Subrouter()
 
-	s.HandleFunc("/login", authHandler.Login).
+	s.HandleFunc("/login", router.authHandler.Login).
 		Methods(http.MethodPost)
 }
