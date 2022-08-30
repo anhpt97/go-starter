@@ -4,7 +4,6 @@ import (
 	"go-starter/dto"
 	"go-starter/entities"
 	"go-starter/enums"
-	"go-starter/env"
 	"go-starter/errors"
 	"go-starter/lib"
 	"go-starter/models"
@@ -19,16 +18,14 @@ import (
 )
 
 type AuthHandler struct {
-	env            lib.Env
-	db             lib.Db
 	userRepository repositories.UserRepository
+	env            lib.Env
 }
 
-func NewAuthHandler(env lib.Env, db lib.Db, userRepository repositories.UserRepository) AuthHandler {
+func NewAuthHandler(userRepository repositories.UserRepository, env lib.Env) AuthHandler {
 	return AuthHandler{
-		env,
-		db,
 		userRepository,
+		env,
 	}
 }
 
@@ -69,9 +66,9 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 			Username:  user.Username,
 			Role:      user.Role,
 			IssuedAt:  now.Unix(),
-			ExpiresAt: now.Add(env.JWT_EXPIRES_AT * time.Second).Unix(),
+			ExpiresAt: now.Add(h.env.JWT_EXPIRES_AT * time.Second).Unix(),
 		},
-	).SignedString(env.JWT_SECRET)
+	).SignedString(h.env.JWT_SECRET)
 
 	response.WriteJSON(w, r, response.Response{
 		Data: models.LoginResponse{

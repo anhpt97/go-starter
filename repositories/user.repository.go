@@ -4,17 +4,22 @@ import (
 	"go-starter/entities"
 	"go-starter/enums"
 	"go-starter/errors"
+	"go-starter/lib"
 	"net/http"
 )
 
-type UserRepository struct{}
+type UserRepository struct {
+	db lib.Db
+}
 
-func NewUserRepository() UserRepository {
-	return UserRepository{}
+func NewUserRepository(db lib.Db) UserRepository {
+	return UserRepository{
+		db,
+	}
 }
 
 func (repository UserRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool) {
-	err := CreateSqlBuilder(user).
+	err := repository.db.Model(user).
 		Where(conditions).
 		Take(&user).Error
 	if err != nil {

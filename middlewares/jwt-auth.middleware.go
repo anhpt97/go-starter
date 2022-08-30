@@ -4,10 +4,8 @@ import (
 	"context"
 	"go-starter/entities"
 	"go-starter/enums"
-	"go-starter/env"
 	"go-starter/errors"
 	"go-starter/models"
-	"go-starter/repositories"
 	"go-starter/utils"
 	"net/http"
 	"strings"
@@ -19,7 +17,7 @@ type key int
 
 var userKey key
 
-func JwtAuth(next http.Handler) http.Handler {
+func (m Middleware) JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 || strings.ToUpper(token[0:7]) != "BEARER " {
@@ -31,7 +29,7 @@ func JwtAuth(next http.Handler) http.Handler {
 		claims := jwt.MapClaims{}
 		_, err := jwt.ParseWithClaims(token, claims,
 			func(*jwt.Token) (any, error) {
-				return env.JWT_SECRET, nil
+				return m.env.JWT_SECRET, nil
 			},
 		)
 		if err != nil {
@@ -44,7 +42,7 @@ func JwtAuth(next http.Handler) http.Handler {
 			return
 		}
 
-		_, ok := (&repositories.UserRepository{}).FindOne(w, r, entities.User{ID: utils.ConvertToUint64(claims["id"])})
+		_, ok := m.userReposiory.FindOne(w, r, entities.User{ID: utils.ConvertToUint64(claims["id"])})
 		if !ok {
 			return
 		}
@@ -55,7 +53,7 @@ func JwtAuth(next http.Handler) http.Handler {
 	})
 }
 
-func GetCurrentUser(w http.ResponseWriter, r *http.Request) (currentUser models.CurrentUser, ok bool) {
+func (m Middleware) GetCurrentUser(w http.ResponseWriter, r *http.Request) (currentUser models.CurrentUser, ok bool) {
 	claims, ok := r.Context().Value(userKey).(jwt.MapClaims)
 	if !ok {
 		errors.InternalServerErrorException(w, r, enums.Error.MissingJwtAuth)

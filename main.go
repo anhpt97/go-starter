@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"go-starter/database"
 	_ "go-starter/docs"
 	"go-starter/handlers"
 	"go-starter/lib"
+	"go-starter/middlewares"
 	"go-starter/repositories"
 	"go-starter/routers"
 	"net/http"
@@ -22,10 +22,10 @@ import (
 // @in   header
 // @name Authorization
 func main() {
-	database.Connect()
 	fx.New(
 		handlers.Module,
 		lib.Module,
+		middlewares.Module,
 		repositories.Module,
 		routers.Module,
 		fx.Invoke(

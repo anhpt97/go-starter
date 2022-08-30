@@ -11,11 +11,13 @@ import (
 
 type BookRouter struct {
 	bookHandler handlers.BookHandler
+	middleware  middlewares.Middleware
 }
 
-func NewBookRouter(bookHandler handlers.BookHandler) BookRouter {
+func NewBookRouter(bookHandler handlers.BookHandler, middleware middlewares.Middleware) BookRouter {
 	return BookRouter{
 		bookHandler,
+		middleware,
 	}
 }
 
@@ -43,9 +45,9 @@ func (router BookRouter) New(r *mux.Router) {
 		Methods(http.MethodPut)
 
 	s.HandleFunc("/{id}",
-		middlewares.NewChain(
-			middlewares.JwtAuth,
-			middlewares.RoleBasedAuth(
+		router.middleware.NewChain(
+			router.middleware.JwtAuth,
+			router.middleware.RoleBasedAuth(
 				// enums.User.Role.Admin,
 				enums.User.Role.User,
 			),

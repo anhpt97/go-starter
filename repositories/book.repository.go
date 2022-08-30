@@ -6,6 +6,7 @@ import (
 	"go-starter/entities"
 	"go-starter/enums"
 	"go-starter/errors"
+	"go-starter/lib"
 	"go-starter/utils"
 	"net/http"
 	"sync"
@@ -13,10 +14,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type BookRepository struct{}
+type BookRepository struct {
+	db lib.Db
+}
 
-func NewBookRepository() BookRepository {
-	return BookRepository{}
+func NewBookRepository(db lib.Db) BookRepository {
+	return BookRepository{
+		db,
+	}
 }
 
 func (repository BookRepository) FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error) {
@@ -58,7 +63,7 @@ func (repository BookRepository) FindAndCount(w http.ResponseWriter, r *http.Req
 }
 
 func (repository BookRepository) FindOne(w http.ResponseWriter, r *http.Request, conditions entities.Book) (book entities.Book, err error) {
-	err = CreateSqlBuilder(book).
+	err = repository.db.Model(book).
 		Joins("User").
 		// Joins("INNER JOIN user ON book.user_id = user.id").
 		// Select(strings.Join(
@@ -83,7 +88,7 @@ func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request, 
 		fields = append(fields, "user_id")
 	}
 
-	err = DB.Select(fields).Create(&book).Error
+	err = repository.db.Select(fields).Create(&book).Error
 	if err != nil {
 		errors.SqlError(w, r, err)
 		return
@@ -102,7 +107,7 @@ func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, 
 		fields = append(fields, "user_id")
 	}
 
-	err = CreateSqlBuilder(book).Select(fields).Updates(body).Error
+	err = repository.db.Model(book).Select(fields).Updates(body).Error
 	if err != nil {
 		errors.SqlError(w, r, err)
 		return
@@ -117,7 +122,7 @@ func (repository BookRepository) Delete(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 
-	err = DB.Delete(&book).Error
+	err = repository.db.Delete(&book).Error
 	if err != nil {
 		errors.SqlError(w, r, err)
 	}

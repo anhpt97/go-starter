@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"go-starter/dto"
 	"go-starter/entities"
+	"go-starter/lib"
+	"go-starter/middlewares"
 	"go-starter/models"
 	"go-starter/repositories"
 	"go-starter/response"
@@ -14,14 +16,18 @@ import (
 )
 
 type BookHandler struct {
+	db             lib.Db
 	bookRepository repositories.BookRepository
 	userRepository repositories.UserRepository
+	middleware     middlewares.Middleware
 }
 
-func NewBookHandler(bookRepository repositories.BookRepository, userRepository repositories.UserRepository) BookHandler {
+func NewBookHandler(db lib.Db, bookRepository repositories.BookRepository, userRepository repositories.UserRepository, middleware middlewares.Middleware) BookHandler {
 	return BookHandler{
+		db,
 		bookRepository,
 		userRepository,
+		middleware,
 	}
 }
 
@@ -39,7 +45,7 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	pagination := utils.Pagination(r)
 
 	books := []entities.Book{}
-	q := repositories.CreateSqlBuilder(books).
+	q := h.db.Model(books).
 		Preload("User")
 	if pagination.Filter["id"] != nil {
 		q.Where("book.id = ?", utils.ConvertToUint64(pagination.Filter["id"]))
@@ -167,7 +173,7 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 // @Success  200                object   response.Response{data=boolean}
 // @Router   /api/v1/books/{id} [DELETE]
 func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	// currentUser, ok := middlewares.GetCurrentUser(w, r)
+	// currentUser, ok := h.middleware.GetCurrentUser(w, r)
 	// if !ok {
 	// 	return
 	// }
