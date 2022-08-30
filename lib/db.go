@@ -3,7 +3,6 @@ package lib
 import (
 	"fmt"
 	"go-starter/entities"
-	"go-starter/repositories"
 	"strconv"
 
 	"gorm.io/driver/mysql"
@@ -12,7 +11,7 @@ import (
 )
 
 type Db struct {
-	db *gorm.DB
+	*gorm.DB
 }
 
 func NewDb(env Env) Db {
@@ -40,8 +39,6 @@ func NewDb(env Env) Db {
 	}
 
 	entities.Sync(db)
-
-	repositories.New(db)
 
 	return Db{db}
 }
