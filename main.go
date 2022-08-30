@@ -34,7 +34,7 @@ func main() {
 				lc.Append(fx.Hook{
 					OnStart: func(ctx context.Context) (err error) {
 						go func() {
-							r := routers.New("/api/v1")
+							r := routers.New("/api")
 							swagger.New(r, "/swagger")
 							http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
 						}()

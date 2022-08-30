@@ -18,7 +18,7 @@ func NewFileRouter(fileHandler handlers.FileHandler) FileRouter {
 }
 
 func (router FileRouter) New(r *mux.Router) {
-	s := r.PathPrefix("/file").Subrouter()
+	s := r.PathPrefix("/v1/file").Subrouter()
 
 	s.HandleFunc("/upload", router.fileHandler.Upload).
 		Methods(http.MethodPost)

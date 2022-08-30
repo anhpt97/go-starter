@@ -18,7 +18,7 @@ func NewAuthRouter(authHandler handlers.AuthHandler) AuthRouter {
 }
 
 func (router AuthRouter) New(r *mux.Router) {
-	s := r.PathPrefix("/auth").Subrouter()
+	s := r.PathPrefix("/v1/auth").Subrouter()
 
 	s.HandleFunc("/login", router.authHandler.Login).
 		Methods(http.MethodPost)

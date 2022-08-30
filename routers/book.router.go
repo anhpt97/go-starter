@@ -22,7 +22,7 @@ func NewBookRouter(bookHandler handlers.BookHandler, middleware middlewares.Midd
 }
 
 func (router BookRouter) New(r *mux.Router) {
-	s := r.PathPrefix("/books").Subrouter()
+	s := r.PathPrefix("/v1/books").Subrouter()
 
 	// s.Use(
 	// 	middlewares.JwtAuth,
