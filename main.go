@@ -1,14 +1,15 @@
 package main
 
 import (
+	"context"
 	"go-starter/database"
 	_ "go-starter/docs"
-	"go-starter/env"
 	"go-starter/handlers"
 	"go-starter/lib"
 	"go-starter/repositories"
 	"go-starter/routers"
 	"net/http"
+	"strconv"
 
 	"go.uber.org/fx"
 )
@@ -27,6 +28,15 @@ func main() {
 		handlers.Module,
 		lib.Module,
 		repositories.Module,
-		fx.Invoke(http.ListenAndServe(":"+env.PORT, r)),
+		fx.Invoke(
+			func(lc fx.Lifecycle, env lib.Env) {
+				lc.Append(fx.Hook{
+					OnStart: func(ctx context.Context) (err error) {
+						go http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
+						return
+					},
+				})
+			},
+		),
 	).Run()
 }

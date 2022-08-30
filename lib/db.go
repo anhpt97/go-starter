@@ -15,7 +15,7 @@ type Db struct {
 	db *gorm.DB
 }
 
-func NewDb(env Env) *Db {
+func NewDb(env Env) Db {
 	var (
 		username = env.DB_USER
 		password = env.DB_PASS
@@ -41,5 +41,5 @@ func NewDb(env Env) *Db {
 
 	repositories.New(db)
 
-	return &Db{db}
+	return Db{db}
 }

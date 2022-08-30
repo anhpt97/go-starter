@@ -20,7 +20,7 @@ type Env struct {
 	JWT_SECRET     []byte
 }
 
-func NewEnv() (env *Env) {
+func NewEnv() (env Env) {
 	viper.SetConfigFile(".env")
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
