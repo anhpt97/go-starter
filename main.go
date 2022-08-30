@@ -8,6 +8,7 @@ import (
 	"go-starter/middlewares"
 	"go-starter/repositories"
 	"go-starter/routers"
+	"go-starter/swagger"
 	"net/http"
 	"strconv"
 
@@ -34,6 +35,7 @@ func main() {
 					OnStart: func(ctx context.Context) (err error) {
 						go func() {
 							r := routers.New("/api/v1")
+							swagger.New(r, "/swagger")
 							http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
 						}()
 						return
