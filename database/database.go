@@ -24,7 +24,9 @@ func Connect() {
 	fmt.Println(dsn)
 
 	db, err := gorm.Open(
-		mysql.Open(dsn),
+		mysql.New(mysql.Config{
+			DSN: dsn,
+		}),
 		&gorm.Config{
 			Logger: logger.Default.LogMode(logger.Info),
 		},
