@@ -23,7 +23,6 @@ import (
 // @name Authorization
 func main() {
 	database.Connect()
-	r := routers.New()
 	fx.New(
 		handlers.Module,
 		lib.Module,
@@ -32,7 +31,10 @@ func main() {
 			func(lc fx.Lifecycle, env lib.Env) {
 				lc.Append(fx.Hook{
 					OnStart: func(ctx context.Context) (err error) {
-						go http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
+						go func() {
+							r := routers.New()
+							http.ListenAndServe(":"+strconv.Itoa(env.PORT), r)
+						}()
 						return
 					},
 				})
