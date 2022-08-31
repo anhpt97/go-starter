@@ -2,11 +2,11 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"go-starter/dto"
 	"go-starter/enums"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"golang.org/x/exp/slices"
 )
@@ -30,6 +30,8 @@ func Pagination(r *http.Request, paginations ...DefaultPagination) dto.Paginatio
 		maxLimit int
 		sort     Sort
 	)
+
+	fmt.Println(query.Get(enums.Query.Sort))
 
 	if len(paginations) > 0 {
 		defaultPagination := paginations[0]
@@ -70,14 +72,14 @@ func Pagination(r *http.Request, paginations ...DefaultPagination) dto.Paginatio
 	filter := map[string]any{}
 	json.Unmarshal([]byte(query.Get(enums.Query.Filter)), &filter)
 
-	if len(strings.TrimSpace(sort.By)) == 0 {
+	if len(sort.By) == 0 {
 		sort.By = "id"
 	}
 	if !slices.Contains(
 		[]enums.SortDirection{
 			enums.Sort.Direction.Asc,
 			enums.Sort.Direction.Desc,
-		}, enums.SortDirection(strings.ToUpper(strings.TrimSpace(string(sort.Direction)))),
+		}, sort.Direction,
 	) {
 		sort.Direction = enums.Sort.Direction.Desc
 	}
