@@ -22,9 +22,7 @@ func NewMiddleware(env lib.Env, userReposiory repositories.IUserRepository) Midd
 	}
 }
 
-var Module = fx.Options(
-	fx.Provide(NewMiddleware),
-)
+var Module = fx.Provide(NewMiddleware)
 
 type middlewareChain []mux.MiddlewareFunc
 

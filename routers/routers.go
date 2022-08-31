@@ -23,11 +23,11 @@ func NewRouters(
 	}
 }
 
-var Module = fx.Options(
-	fx.Provide(NewRouters),
-	fx.Provide(NewAuthRouter),
-	fx.Provide(NewBookRouter),
-	fx.Provide(NewFileRouter),
+var Module = fx.Provide(
+	NewRouters,
+	NewAuthRouter,
+	NewBookRouter,
+	NewFileRouter,
 )
 
 func (routers Routers) New(prefix string) *mux.Router {
