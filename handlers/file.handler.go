@@ -22,7 +22,7 @@ func NewFileHandler() FileHandler {
 // @Param   locale              query    string false " " enums(en,vi)
 // @Success 201                 object   response.Response{data=boolean}
 // @Router  /api/v1/file/upload [POST]
-func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
+func (h *FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 	_, fileHeader, err := r.FormFile("file")
 	if err != nil {
 		switch err {

@@ -41,7 +41,7 @@ func NewBookHandler(db lib.Db, bookRepository repositories.BookRepository, userR
 // @Param   locale        query  string false " " enums(en,vi)
 // @Success 200           object response.Response{data=models.PaginationResponse{items=[]entities.Book,total=number}}
 // @Router  /api/v1/books [GET]
-func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	pagination := utils.Pagination(r)
 
 	books := []entities.Book{}
@@ -97,7 +97,7 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 // @Param   locale             query  string false " " enums(en,vi)
 // @Success 200                object response.Response{data=entities.Book}
 // @Router  /api/v1/books/{id} [GET]
-func (h BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
 	book, err := h.bookRepository.FindOne(w, r, entities.Book{ID: utils.ConvertToUint64(id)})
@@ -116,7 +116,7 @@ func (h BookHandler) GetOneByID(w http.ResponseWriter, r *http.Request) {
 // @Param   locale        query  string             false " " enums(en,vi)
 // @Success 201           object response.Response{data=entities.Book}
 // @Router  /api/v1/books [POST]
-func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	body := dto.CreateBookBody{}
 	fields, err := utils.ValidateRequestBody(w, r, &body)
 	if err != nil {
@@ -147,7 +147,7 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 // @Param   locale             query  string             false " " enums(en,vi)
 // @Success 200                object response.Response{data=entities.Book}
 // @Router  /api/v1/books/{id} [PUT]
-func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	body := dto.UpdateBookBody{}
 	fields, err := utils.ValidateRequestBody(w, r, &body)
 	if err != nil {
@@ -172,7 +172,7 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 // @Param    locale             query    string false " " enums(en,vi)
 // @Success  200                object   response.Response{data=boolean}
 // @Router   /api/v1/books/{id} [DELETE]
-func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	// currentUser, ok := h.middleware.GetCurrentUser(w, r)
 	// if !ok {
 	// 	return
