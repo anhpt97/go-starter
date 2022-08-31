@@ -12,10 +12,10 @@ import (
 
 type Middleware struct {
 	env           lib.Env
-	userReposiory repositories.UserRepository
+	userReposiory repositories.IUserRepository
 }
 
-func NewMiddleware(env lib.Env, userReposiory repositories.UserRepository) Middleware {
+func NewMiddleware(env lib.Env, userReposiory repositories.IUserRepository) Middleware {
 	return Middleware{
 		env,
 		userReposiory,
@@ -28,12 +28,12 @@ var Module = fx.Options(
 
 type middlewareChain []mux.MiddlewareFunc
 
-func (m Middleware) NewChain(middlewareFuncs ...mux.MiddlewareFunc) middlewareChain {
+func (m *Middleware) NewChain(middlewareFuncs ...mux.MiddlewareFunc) middlewareChain {
 	return lo.Reverse(middlewareFuncs)
 }
 
-func (chain middlewareChain) Then(handler http.HandlerFunc) http.HandlerFunc {
-	for _, middleware := range chain {
+func (mc middlewareChain) Then(handler http.HandlerFunc) http.HandlerFunc {
+	for _, middleware := range mc {
 		if middleware == nil {
 			return handler
 		}

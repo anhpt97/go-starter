@@ -17,12 +17,12 @@ import (
 
 type BookHandler struct {
 	db             lib.Db
-	bookRepository repositories.BookRepository
-	userRepository repositories.UserRepository
+	bookRepository repositories.IBookRepository
+	userRepository repositories.IUserRepository
 	middleware     middlewares.Middleware
 }
 
-func NewBookHandler(db lib.Db, bookRepository repositories.BookRepository, userRepository repositories.UserRepository, middleware middlewares.Middleware) BookHandler {
+func NewBookHandler(db lib.Db, bookRepository repositories.IBookRepository, userRepository repositories.IUserRepository, middleware middlewares.Middleware) BookHandler {
 	return BookHandler{
 		db,
 		bookRepository,

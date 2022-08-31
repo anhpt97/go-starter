@@ -18,8 +18,16 @@ type BookRepository struct {
 	db lib.Db
 }
 
-func NewBookRepository(db lib.Db) BookRepository {
-	return BookRepository{
+type IBookRepository interface {
+	FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error)
+	FindOne(w http.ResponseWriter, r *http.Request, conditions entities.Book) (book entities.Book, err error)
+	Create(w http.ResponseWriter, r *http.Request, body dto.CreateBookBody, fields []string) (book entities.Book, err error)
+	Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody, fields []string) (book entities.Book, err error)
+	Delete(w http.ResponseWriter, r *http.Request, id any) (err error)
+}
+
+func NewBookRepository(db lib.Db) IBookRepository {
+	return &BookRepository{
 		db,
 	}
 }

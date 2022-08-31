@@ -9,7 +9,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func (m Middleware) RoleBasedAuth(roles ...enums.UserRole) mux.MiddlewareFunc {
+func (m *Middleware) RoleBasedAuth(roles ...enums.UserRole) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			currentUser, ok := m.GetCurrentUser(w, r)

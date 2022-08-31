@@ -18,11 +18,11 @@ import (
 )
 
 type AuthHandler struct {
-	userRepository repositories.UserRepository
+	userRepository repositories.IUserRepository
 	env            lib.Env
 }
 
-func NewAuthHandler(userRepository repositories.UserRepository, env lib.Env) AuthHandler {
+func NewAuthHandler(userRepository repositories.IUserRepository, env lib.Env) AuthHandler {
 	return AuthHandler{
 		userRepository,
 		env,

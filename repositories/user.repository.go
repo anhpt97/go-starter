@@ -12,8 +12,12 @@ type UserRepository struct {
 	db lib.Db
 }
 
-func NewUserRepository(db lib.Db) UserRepository {
-	return UserRepository{
+type IUserRepository interface {
+	FindOne(w http.ResponseWriter, r *http.Request, conditions entities.User) (user entities.User, ok bool)
+}
+
+func NewUserRepository(db lib.Db) IUserRepository {
+	return &UserRepository{
 		db,
 	}
 }

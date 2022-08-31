@@ -10,12 +10,12 @@ import (
 
 type HttpService struct{}
 
-func (s HttpService) Get() {
+func (s *HttpService) Get() {
 	r, _ := http.NewRequest(http.MethodGet, "<url>", nil)
 	s.Do(r)
 }
 
-func (s HttpService) Post() {
+func (s *HttpService) Post() {
 	body, _ := json.Marshal(map[string]any{
 		"username": "superadmin",
 		"password": "123456",
@@ -24,7 +24,7 @@ func (s HttpService) Post() {
 	s.Do(r)
 }
 
-func (s HttpService) Do(r *http.Request) (data map[string]any, err error) {
+func (s *HttpService) Do(r *http.Request) (data map[string]any, err error) {
 	r.Header = http.Header{
 		"Content-Type": {"application/json"},
 		// "Authorization": {"Bearer <token>"},

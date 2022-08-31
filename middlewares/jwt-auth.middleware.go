@@ -17,7 +17,7 @@ type key int
 
 var userKey key
 
-func (m Middleware) JwtAuth(next http.Handler) http.Handler {
+func (m *Middleware) JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		if len(token) < 7 || strings.ToUpper(token[0:7]) != "BEARER " {
@@ -53,7 +53,7 @@ func (m Middleware) JwtAuth(next http.Handler) http.Handler {
 	})
 }
 
-func (m Middleware) GetCurrentUser(w http.ResponseWriter, r *http.Request) (currentUser models.CurrentUser, ok bool) {
+func (m *Middleware) GetCurrentUser(w http.ResponseWriter, r *http.Request) (currentUser models.CurrentUser, ok bool) {
 	claims, ok := r.Context().Value(userKey).(jwt.MapClaims)
 	if !ok {
 		errors.InternalServerErrorException(w, r, enums.Error.MissingJwtAuth)
