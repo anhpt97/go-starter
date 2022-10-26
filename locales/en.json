@@ -1,0 +1,15 @@
+{
+  "BOOK_NOT_FOUND": "book not found",
+  "DATA_NOT_FOUND": "data not found",
+  "DISABLED_ACCOUNT": "account has been disabled",
+  "FILE_NOT_FOUND": "file not found",
+  "INVALID_FILE_FORMAT": "invalid file format",
+  "INVALID_INPUT_DATA": "invalid input data",
+  "INVALID_PASSWORD": "invalid password",
+  "INVALID_TIME_VALUE": "invalid time value",
+  "MISSING_JWT_AUTH": "missing JWT authentication",
+  "NON_ACTIVATED_ACCOUNT": "account has not been activated",
+  "PAYLOAD_TOO_LARGE": "payload too large",
+  "PERMISSION_DENIED": "permission denied",
+  "USER_NOT_FOUND": "user not found"
+}
