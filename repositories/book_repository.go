@@ -76,7 +76,6 @@ func (repository *BookRepository) FindAndCount(w http.ResponseWriter, r *http.Re
 	go func() {
 		defer wg.Done()
 
-		books = []*entities.Book{}
 		err := cursor.All(r.Context(), &books)
 		if err != nil {
 			ch <- err
